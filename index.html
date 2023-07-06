@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tic Tac Toe</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .board {
+            display: inline-block;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .board td {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #ccc;
+            text-align: center;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .board td:hover {
+            background: #f5f5f5;
+        }
+
+        .message {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<h1>Tic Tac Toe</h1>
+<table class="board">
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+<div class="message"></div>
+
+<script>
+    // Game logic
+    let currentPlayer = "X";
+    let gameEnded = false;
+    const board = [
+        ["", "", ""],
+        ["", "", ""],
+        ["", "", ""]
+    ];
+
+    const cells = document.querySelectorAll(".board td");
+    const message = document.querySelector(".message");
+
+    function handleCellClick(row, col) {
+        if (board[row][col] === "" && !gameEnded) {
+            board[row][col] = currentPlayer;
+            cells[row * 3 + col].textContent = currentPlayer;
+
+            if (checkWin(currentPlayer)) {
+                message.textContent = `${currentPlayer} wins!`;
+                gameEnded = true;
+            } else if (checkDraw()) {
+                message.textContent = "It's a draw!";
+                gameEnded = true;
+            } else {
+                currentPlayer = currentPlayer === "X" ? "O" : "X";
+                message.textContent = `Current Player: ${currentPlayer}`;
+            }
+        }
+    }
+
+    function checkWin(player) {
+        for (let i = 0; i < 3; i++) {
+            if (
+                board[i][0] === player &&
+                board[i][1] === player &&
+                board[i][2] === player
+            ) {
+                return true;
+            }
+            if (
+                board[0][i] === player &&
+                board[1][i] === player &&
+                board[2][i] === player
+            ) {
+                return true;
+            }
+        }
+        if (
+            board[0][0] === player &&
+            board[1][1] === player &&
+            board[2][2] === player
+        ) {
+            return true;
+        }
+        if (
+            board[0][2] === player &&
+            board[1][1] === player &&
+            board[2][0] === player
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    function checkDraw() {
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                if (board[i][j] === "") {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    // Event listeners
+    cells.forEach((cell, index) => {
+        const row = Math.floor(index / 3);
+        const col = index % 3;
+        cell.addEventListener("click", () => handleCellClick(row, col));
+    });
+</script>
+</body>
+</html>
